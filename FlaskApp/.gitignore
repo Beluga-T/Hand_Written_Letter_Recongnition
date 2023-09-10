@@ -1,0 +1,8 @@
+preprocess_images_data_npy/train_images.npy
+preprocess_images_data_npy/test_images.npy
+preprocess_images_data_npy/
+
+*.log
+*.npy
+/exported_images/
+/test_images_png/
