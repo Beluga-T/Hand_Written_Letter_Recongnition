@@ -1,1 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw a Letter</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'SF Pro Display', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #0D1117, #0D1117); /* GitHub's deep blue to dark color */
+            color: #fff;
+            animation: fadeIn 1.5s;
+        }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        canvas {
+            border: 1px solid #fff;
+            display: block;
+            margin: 20px auto;
+            background-color: #444;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        button, select {
+            margin: 15px 10px; /* Adjusted the horizontal margin */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #EB726A;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #EB726A;
+            transition: background-color 0.3s, transform 0.3s, color 0.3s; /* Added color to the transition */
+        }
+
+
+        h2 {
+            color: #7EE787; /* Highlight color for subtopic headers */
+        }
+
+        .model-section {
+            opacity: 0; /* Start with content hidden */
+            transition: opacity 0.5s; /* Transition effect for opacity */
+            display: none; /* Initially hide all sections */
+        }
+
+        .model-section.active {
+            opacity: 1; /* Show active sections */
+            display: block; /* Display the active sections */
+        }
+
+        button:hover, select:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        button:focus, select:focus {
+            outline: none;
+        }
+        /* Specific hover styles for the Predict and Clear buttons */
+        #predictButton:hover {
+            background-color: #7EE787; /* Green color when hovering over the Predict button */
+            border: 1px solid #7EE787;
+            color: #ffffff; /* White font color */
+
+        }
+
+        #clearButton:hover {
+            background-color: #EB726A; /* Red color when hovering over the Clear button */
+            color: #ffffff; /* White font color */
+        }
+        #prediction {
+            font-size: 24px;
+            font-weight: bold;
+            width: 80%;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none; /* Remove the border */
+            border-radius: 10px;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(-20px); /* Initially shifted up for a slide-down effect */
+            transition: opacity 0.5s, transform 0.5s; /* Transition effect for smooth appearance */
+            display: none; /* Initially set to none */
+        }
+        body #prediction {
+            border: none !important;
+            background-color:#0D1117
+        }
+
+
+        #methodology, #implementation, #confusionMatrix {
+            margin: 50px auto;
+            max-width: 800px;
+            text-align: left;
+            animation: slideIn 1.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        img {
+            max-width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        /* Modern Dropdown */
+        #modelSelector {
+            appearance: none; /* Remove default appearance */
+            background-color: rgba(255, 255, 255, 0.1);
+            background-image: linear-gradient(45deg, transparent 50%, #fff 50%), linear-gradient(135deg, #fff 50%, transparent 50%);
+            background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), 100% 0;
+            background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 10px 30px 10px 10px; /* Add padding to the right for the arrow */
+        }
+
+        /* Enhanced Canvas */
+        canvas {
+            border: none; /* Remove the solid border */
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #444 0%, #555 100%);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        /* Custom Dropdown */
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+            width: 125px; /* Adjust this value as per your requirement */
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            text-align: center;
+            z-index: 2; /* Add a z-index to ensure it's above other elements */
+        }
+
+        .custom-dropdown::after {
+            content: '▼';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .dropdown-options {
+            display: none;
+            position: absolute;
+            top: 100%; /* This will position the dropdown right below the button */
+            margin-top: 5px; /* Add a little margin for separation */
+            left: 0; /* Ensures the dropdown starts from the left edge of the parent */
+            width: 100%; /* Ensures the dropdown takes the full width of the parent */
+            box-sizing: border-box; /* Ensures padding and border are included in the width */
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black background */
+        }
+
+        .dropdown-options div {
+            padding: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-options div:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        /* Enhanced prediction styling */
+        #prediction {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 15px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .model-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            text-align: left; /* Align content to the left */
+            max-width: 800px; /* Limit the width for better readability */
+            margin: 0 auto;   /* Center the container */
+        }
+
+        .model-section.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Welcome to the Letter Prediction Tool</h1>
+    <p>Draw a letter below and let our advanced models predict it for you.</p>
+
+    <canvas id="canvas" width="280" height="280"></canvas>
+    <div>
+        <div class="custom-dropdown" onclick="toggleDropdown()">
+            <span id="selectedModel">Select Model</span>
+            <div class="dropdown-options" id="modelOptions">
+                <div onclick="updateModel('cnn')">CNN Model</div>
+                <div onclick="updateModel('ann')">ANN Model</div>
+                <div onclick="updateModel('meta')">Meta Model</div>
+            </div>
+        </div>
+
+        <button id="predictButton" onclick="predictLetter()">Predict</button>
+        <button id="clearButton" onclick="clearCanvas()">Clear</button>
+
+    </div>
+    <p id="prediction"></p>
+
+    <!-- Methodology & Implementation Sections -->
+    <section id="cnnMethodology" class="model-section">
+        <h2>CNN Model's Methodology</h2>
+        <p>The Convolutional Neural Network (CNN) is specifically designed for image recognition. It uses convolutional layers to filter inputs for useful information. These convolutional layers can develop and train on certain aspects of an image.</p>
+    </section>
+
+    <section id="cnnImplementation" class="model-section">
+        <h2>CNN Model's Implementation</h2>
+        <p>Our CNN model is implemented using TensorFlow and Keras. It uses multiple convolutional layers followed by pooling layers, fully connected layers, and a final softmax layer to classify the input image into one of the classes.</p>
+    </section>
+
+    <section id="cnnConfusionMatrix" class="model-section">
+        <h2>CNN Model's Confusion Matrix</h2>
+        <img src="{{ url_for('static', filename='CNN_confusion_matrix.png') }}" alt="CNN Model's Confusion Matrix">
+    </section>
+
+    <section id="annMethodology" class="model-section">
+        <h2>ANN Model's Methodology</h2>
+         <p>Artificial Neural Networks (ANNs) are computing systems inspired by the neural networks that constitute animal brains. They are used for pattern recognition and can learn and make independent decisions by analyzing data.</p>
+    </section>
+
+    <section id="annImplementation" class="model-section">
+        <h2>ANN Model's Implementation</h2>
+        <p>Our ANN model is also implemented using TensorFlow and Keras. It consists of an input layer, multiple hidden layers, and an output layer. Each neuron in a layer receives an input from the neurons present in the previous layer, thus making it fully connected.</p>
+    </section>
+
+    <section id="annConfusionMatrix" class="model-section">
+        <h2>ANN Model's Confusion Matrix</h2>
+        <img src="{{ url_for('static', filename='ANN_confusion_matrix.png') }}" alt="ANN Model's Confusion Matrix">
+    </section>
+
+    <section id="metaMethodology" class="model-section">
+        <h2>Meta Model's Methodology</h2>
+        <p>The Meta Model combines the strengths of both CNN and ANN models to offer superior accuracy and performance. It uses the outputs of both models as inputs and makes a final decision based on them.</p>
+    </section>
+
+    <section id="metaImplementation" class="model-section">
+        <h2>Meta Model's Implementation</h2>
+       <p>The Meta Model is a combination of our CNN and ANN models. It takes the outputs of both models, processes them, and then uses a softmax layer to make the final classification.</p>
+    </section>
+    <section id="metaConfusionMatrix" class="model-section">
+        <h2>Meta Model's Confusion Matrix</h2>
+        <img src="{{ url_for('static', filename='meta_confusion_matrix.png') }}" alt="Meta Model's Confusion Matrix">
+    </section>
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let drawing = false;
+        let selectedModelValue = 'cnn';  // Default value
+
+        canvas.addEventListener('mousedown', function(event) {
+            drawing = true;
+            var pos = getMousePos(canvas, event);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+            ctx.closePath();
+        });
+
+        canvas.addEventListener('mousemove', function(event) {
+            if (!drawing) return;
+            var pos = getMousePos(canvas, event);
+            ctx.lineWidth = 20;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function getResizedCanvasDataURL() {
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 28;
+            tempCanvas.height = 28;
+            let tempCtx = tempCanvas.getContext('2d');
+
+            tempCtx.drawImage(canvas, 0, 0, 280, 280, 0, 0, 28, 28);
+
+            return tempCanvas.toDataURL();
+        }
+        function getMousePos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+
+       function predictLetter() {
+            let imageDataURL = getResizedCanvasDataURL();
+            let modelChoice = selectedModelValue;
+
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: JSON.stringify({ image_data_url: imageDataURL, model_choice: modelChoice }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    // confidence is a decimal, so multiply by 100 to get a percentage
+                    confidence = response.confidence * 100;
+                    $('#prediction').text(`Model: ${response.model_used}, Predicted Class: ${response.predicted_class}, Confidence: ${response.confidence.toFixed(2) * 100}%`);
+
+                    // Display the prediction section smoothly
+                    const predictionSection = document.getElementById('prediction');
+                    predictionSection.style.display = 'block'; // Make it block to occupy space
+                    setTimeout(() => {
+                        predictionSection.style.opacity = '1'; // Make it visible
+                        predictionSection.style.transform = 'translateY(0)'; // Slide it down
+                    }, 50); // Short delay to ensure the transition starts after display is set to block
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("An error occurred while making the prediction.");
+                }
+            });
+        }
+
+       function toggleDropdown() {
+            const options = document.getElementById('modelOptions');
+            options.style.display = options.style.display === 'none' ? 'block' : 'none';
+       }
+
+        function updateModel(model) {
+            const selectedModel = document.getElementById('selectedModel');
+            const activeSections = document.querySelectorAll('.model-section.active');
+
+            // Fade out current content
+            activeSections.forEach(el => {
+                el.style.opacity = 0;
+            });
+
+            setTimeout(() => {
+                // Hide all currently active sections
+                activeSections.forEach(el => {
+                    el.classList.remove('active');
+                    el.style.display = 'none';
+                });
+
+                // Update the selected model title
+                selectedModel.textContent = model.charAt(0).toUpperCase() + model.slice(1) + ' Model';
+                selectedModelValue = model;
+
+                // Show the selected model's sections but keep their opacity at 0
+                document.getElementById(model + 'Methodology').classList.add('active');
+                document.getElementById(model + 'Implementation').classList.add('active');
+                document.getElementById(model + 'ConfusionMatrix').classList.add('active');
+
+                // Display the updated content but keep them invisible
+                document.getElementById(model + 'Methodology').style.display = 'block';
+                document.getElementById(model + 'Implementation').style.display = 'block';
+                document.getElementById(model + 'ConfusionMatrix').style.display = 'block';
+
+                // After a short delay, fade in the new content
+                setTimeout(() => {
+                    document.getElementById(model + 'Methodology').style.opacity = 1;
+                    document.getElementById(model + 'Implementation').style.opacity = 1;
+                    document.getElementById(model + 'ConfusionMatrix').style.opacity = 1;
+                }, 50); // Short delay to ensure the new content starts fading in after it's displayed
+            }, 500); // 500ms matches the transition duration in the CSS
+        }
+
+        // Call the updateModel function with the default model choice to set initial content
+        updateModel('cnn');
+
+
+    </script>
+</body>
+</html>
