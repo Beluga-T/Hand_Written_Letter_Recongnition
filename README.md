@@ -2,12 +2,12 @@
 
 ## Introduction
 
-This project houses a collection of machine learning models including ANN, CNN, and a meta-model which is a combination of CNN and ANN. https://sketch2letter-82e3eb8c54bf.herokuapp.com/ is the web app that allows use to write letters by hand, and the pre-trained model will return the result.
+This project houses a collection of machine learning models including ANN, CNN, and a Meta-model which is a combination of CNN and ANN. https://sketch2letter-82e3eb8c54bf.herokuapp.com/ is the web app that allows users to write letters by hand, and the pre-trained model will return the result.
 To train the model, ensure to set up your environment properly by following the steps outlined below.
 
 ## Installation
 
-To set up the necessary environment to train the models. We recommand using conda/miniconda. You will need to install several packages and python 3.10.12 You can install all the required packages using the following command:
+To set up the necessary environment to train the models, we recommend using conda/miniconda. You will need to install several packages and python 3.10.12. You can install all the required packages using the following command:
 
 ```bash
 pip install optuna numpy tensorflow tensorflow-datasets==4.0.1 scikit-learn tqdm matplotlib pydot graphviz
@@ -17,10 +17,10 @@ pip install optuna numpy tensorflow tensorflow-datasets==4.0.1 scikit-learn tqdm
 
 1. Load pre-trained ANN and CNN model. 
 2. Generate predictions from both ANN and CNN model. 
-3. stacks the predictions from the ANN and CNN models. 
-4. Creates, compiles, and trains a meta-model using the stacked predictions. 
-5. Saves the trained meta-model to the specified path. 
-6. Generates a confusion matrix and a classification report to evaluate the performance of the meta-model and saves the confusion matrix plot to a PNG file. 
+3. Stacks the predictions from the ANN and CNN models. 
+4. Creates, compiles, and trains a Meta-model using the stacked predictions. 
+5. Saves the trained Meta-model to the specified path. 
+6. Generates a confusion matrix and a classification report to evaluate the performance of the Meta-model and saves the confusion matrix plot to a PNG file. 
 
 ## Trainning the Models
 
@@ -44,7 +44,7 @@ python ./CNN_src/cnn_model.py
 ```
 ### Meta model
 
-To train the ANN model, use the following command in your terminal:
+To train the Meta model, use the following command in your terminal:
 
 ```bash
 python ./META_model_src/meta_model.py
