@@ -61,7 +61,25 @@
             opacity: 1; /* Show active sections */
             display: block; /* Display the active sections */
         }
+        /* Project Overview, Challenges, and Team Contribution Section Styles */
 
+        #projectOverview, #challengesFaced,#challengesFaced2,#challengesFaced3, #teamContribution {
+            opacity: 0;
+            transition: opacity 0.5s;
+            text-align: left; /* Align content to the left */
+            max-width: 800px; /* Limit the width for better readability */
+            margin: 0 auto;   /* Center the container */
+        }
+
+        #projectOverview h2, #challengesFaced h2,#challengesFaced2 h2,#challengesFaced3 h2, #teamContribution h2 {
+            color: #8959DD; /* Updated color */
+        }
+
+        #projectOverview p, #challengesFaced p,#challengesFaced2 p, #challengesFaced3 p, #teamContribution p {
+            color: #fff; /* White color for the text */
+            line-height: 1.6; /* Spacing between lines for better readability */
+            margin-top: 20px; /* Space between header and text */
+        }
         button:hover, select:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
@@ -76,6 +94,14 @@
             color: #ffffff; /* White font color */
 
         }
+        /*.model-section, #projectOverview, #challengesFaced,#challengesFaced2, #teamContribution{*/
+        /*    min-height: 15vh;  !* Take up the full viewport height *!*/
+        /*    margin: 0;      !* No margin between sections *!*/
+        /*    opacity: 0;*/
+        /*    transition: opacity 0.5s;*/
+        /*    overflow: hidden;  !* Prevent content overflow *!*/
+        /*}*/
+
 
         #clearButton:hover {
             background-color: #EB726A; /* Red color when hovering over the Clear button */
@@ -199,6 +225,7 @@
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.1);
         }
+
         .model-section {
             display: none;
             opacity: 0;
@@ -212,6 +239,20 @@
             display: block;
             opacity: 1;
         }
+        #projectOverview,
+        #challengesFaced,
+        #teamContribution,
+        .model-section {
+
+            margin: 40px auto;
+        }
+        .highlighted-accuracy {
+            color: #7EE787; /* GitHub's green color */
+            font-weight: bold; /* Makes the text bold */
+            /*font-size: 1.5em;*/
+
+        }
+
     </style>
 
 </head>
@@ -234,22 +275,32 @@
         <button id="clearButton" onclick="clearCanvas()">Clear</button>
 
     </div>
+
+    <div style="font-size: 11px; margin-top: 10px;">
+        <p style="font-size: 12px; color: #888; margin-top: 10px;">
+            <strong>Caution:</strong> There is a possibility that if you open this page in Safari, the prediction may always return "L" or "w"   </p>
+        <p style="font-size: 12px; color: #888; margin-top: 10px;"> This is due to in some versions of Safari failed to send the image to back-end models correctly.</p>
+        <p style="font-size: 12px; color: #888; margin-top: 10px;">Please try to open this web app in Chrome.</p>
+    </div>
     <p id="prediction"></p>
 
     <!-- Methodology & Implementation Sections -->
-    <section id="cnnMethodology" class="model-section">
+    <section id="cnnMethodology" class="model-section" style="opacity: 1;">
         <h2>CNN Model's Methodology</h2>
         <p>The Convolutional Neural Network (CNN) is specifically designed for image recognition. It uses convolutional layers to filter inputs for useful information. These convolutional layers can develop and train on certain aspects of an image.</p>
     </section>
 
-    <section id="cnnImplementation" class="model-section">
+    <section id="cnnImplementation" class="model-section" style="opacity: 1;">
         <h2>CNN Model's Implementation</h2>
         <p>Our CNN model is implemented using TensorFlow and Keras. It uses multiple convolutional layers followed by pooling layers, fully connected layers, and a final softmax layer to classify the input image into one of the classes.</p>
+        <p> Accuracy on test set: <span class="highlighted-accuracy">93.4%</span> </p>
     </section>
 
-    <section id="cnnConfusionMatrix" class="model-section">
+    <section id="cnnConfusionMatrix" class="model-section" style="opacity: 1;">
         <h2>CNN Model's Confusion Matrix</h2>
         <img src="{{ url_for('static', filename='CNN_confusion_matrix.png') }}" alt="CNN Model's Confusion Matrix">
+<!--        <img src="static/CNN_confusion_matrix.png" alt="CNN Model's Confusion Matrix">-->
+
     </section>
 
     <section id="annMethodology" class="model-section">
@@ -260,11 +311,13 @@
     <section id="annImplementation" class="model-section">
         <h2>ANN Model's Implementation</h2>
         <p>Our ANN model is also implemented using TensorFlow and Keras. It consists of an input layer, multiple hidden layers, and an output layer. Each neuron in a layer receives an input from the neurons present in the previous layer, thus making it fully connected.</p>
+        <p> Accuracy on test set: <span class="highlighted-accuracy">92.9%</span> </p>
     </section>
 
     <section id="annConfusionMatrix" class="model-section">
         <h2>ANN Model's Confusion Matrix</h2>
         <img src="{{ url_for('static', filename='ANN_confusion_matrix.png') }}" alt="ANN Model's Confusion Matrix">
+
     </section>
 
     <section id="metaMethodology" class="model-section">
@@ -274,17 +327,110 @@
 
     <section id="metaImplementation" class="model-section">
         <h2>Meta Model's Implementation</h2>
-       <p>The Meta Model is a combination of our CNN and ANN models. It takes the outputs of both models, processes them, and then uses a softmax layer to make the final classification.</p>
+       <p>We use the CNN and ANN models to guess what's in our training pictures and combine these guesses in a list called stacked_predictions. We do the same for test pictures.
+
+            Our meta model has two simple layers: one with 50 neurons dense layer and an output layer matching the number of items we want to guess. Using 'adam' and 'sparse_categorical_crossentropy', we train this model with our combined guesses and the correct training answers.</p>
+       <p> Accuracy on test set: <span class="highlighted-accuracy">95%</span> </p>
     </section>
     <section id="metaConfusionMatrix" class="model-section">
         <h2>Meta Model's Confusion Matrix</h2>
         <img src="{{ url_for('static', filename='meta_confusion_matrix.png') }}" alt="Meta Model's Confusion Matrix">
     </section>
+
+    <!-- Information Section -->
+
+    <!-- Project Overview Section -->
+    <section id="projectOverview">
+        <h2>Project Overview</h2>
+        <p>
+            We built three different neural networks: CNNs, ANNs, and a Metamodel that basically blends the CNN and ANN together. Our main goal was to figure out which model would give us the best accuracy on our test set.
+
+            The tool we developed is quite straightforward: you draw a letter, and it tries its best to guess what you wrote.
+        </p>
+        <!-- You can add more content, images, etc. as needed -->
+    </section>
+
+    <!-- Challenges Faced Section -->
+    <section id="challengesFaced">
+    <h2>Challenges Faced</h2>
+    <p>Throughout the project, we ran into several challenges that tested our problem-solving skills and determination. Below are some of the major hurdles we faced and the solutions we implemented:</p>
+
+    <div class="challenge" style="margin-bottom: 30px;">
+        <h3>1. Unsatisfactory Performance of the baseline ANN Models</h3>
+        <p>One of the first challenges we encountered with was the underwhelming accuracy of our initial, untuned model. It was evident that without fine-tuning, the model's performance wouldn't meet our standards.</p>
+
+        <p>To address this, we turned to Optuna, an open-source hyperparameter optimization framework. By defining a hypermodel and leveraging Optuna with Bayesian pruning, we were able to enhance our ANN's accuracy remarkably. This optimization step elevated our test accuracy from a mere 84% to a commendable 92.9%.</p>
+    </div>
+    </section>
+
+    <section id="challengesFaced2">
+    <div class="challenge" style="margin-bottom: 30px;">
+        <h3>2. Bridging the Gap to State-of-the-Art (SOTA) Performance</h3>
+        <p>Even though the MNIST dataset is extensively studied, we discovered that the SOTA method for the EMNIST/letters dataset peaked at around 96% accuracy. Our independently constructed CNN, while commendable, achieved 93% accuracy on the test set. This led us to question: How could we further close the gap with the SOTA results?</p>
+
+        <p>Driven by the ambition to approach, we trained a meta model. The result was promising — an accuracy of 95% on the test set, marking our effort as a significant stride towards the SOTA benchmark.</p>
+    </div>
+    </section>
+
+    <!-- Challenges Faced Section Point 3 -->
+    <section id="challengesFaced3">
+    <div class="challenge" style="margin-bottom: 30px;">
+        <h3>3. Web UI Deployment and Iteration</h3>
+
+        <p>Several iterations were undertaken to transform the canvas. Each version, while an improvement over the last, presented its own unique challenges. From resizing issues to color contrasts, every modification was a learning experience. Flask, as our chosen web framework, facilitated these changes, but the deployment on Heroku presented a different set of challenges. Troubleshooting build packs, managing dyno behaviors, and optimizing startup times felt like navigating through a maze.</p>
+
+        <p>With persistent effort, we evolved our tool from a basic canvas to the polished version you see today. </p>
+
+    </div>
+    </section>
+
+    <!-- Team Contribution Section -->
+    <section id="teamContribution">
+        <h2>Team Member Contribution</h2>
+        <p><ul>
+            <li><strong>Siwei Tan:</strong> Train the Meta Model & fine-tune all models & front-end development</li>
+            <li><strong>Sean Ruan:</strong> Find the data set & train the CNN model</li>
+            <li><strong>Keith Bai:</strong> Train the CNN model & web app deployment</li>
+            <li><strong>Ekko Zhang:</strong> Train the ANN model & improve ANN performance</li>
+            <li><strong>Yisong Tang:</strong> Build the user interface, and fine-tune the models</li>
+        </ul>
+
+
+        </p>
+        <!-- You can add more content, images, etc. as needed -->
+        <h2>Additional Information</h2>
+    <p>
+        For more detailed information and access to the project source code, please visit our GitHub repository.
+        <a href="https://github.com/Beluga-T/Hand_Written_Letter_Recongnition/tree/main" style="color: #EB726A">
+            Project Repository
+        </a>
+    </p>
+    </section>
+
+
     <script>
         let canvas = document.getElementById('canvas');
         let ctx = canvas.getContext('2d');
         let drawing = false;
         let selectedModelValue = 'cnn';  // Default value
+        let lastScrollTop = 0;
+
+       window.addEventListener('scroll', function() {
+            document.querySelectorAll('.model-section, #projectOverview, #challengesFaced,#challengesFaced2, #challengesFaced3,#teamContribution').forEach(section => {
+                let rect = section.getBoundingClientRect();
+
+                let sectionMidpoint = (rect.top + rect.bottom) / 2;  // Middle point of the section
+
+                if (sectionMidpoint > 0 && sectionMidpoint < window.innerHeight) {
+                    // The midpoint of the section is within the viewport
+                    section.style.opacity = 1;
+                } else {
+                    // The midpoint of the section is out of the viewport
+                    section.style.opacity = 0;
+                }
+            });
+       }, false);
+
 
         canvas.addEventListener('mousedown', function(event) {
             drawing = true;
@@ -303,7 +449,7 @@
             var pos = getMousePos(canvas, event);
             ctx.lineWidth = 20;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = 'white';
 
             ctx.lineTo(pos.x, pos.y);
             ctx.stroke();
@@ -314,17 +460,62 @@
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Determine which section is currently visible
+            function adjustVisibility() {
+                let sections = document.querySelectorAll('.model-section');
+                sections.forEach(section => {
+                    let rect = section.getBoundingClientRect();
 
+                    // If the top of the section is within the viewport
+                    if (rect.top >= 0 && rect.top <= window.innerHeight) {
+                        section.style.opacity = 1;
+                    } else {
+                        section.style.opacity = 0;
+                    }
+                });
+            }
+
+            // Adjust visibility on scroll and initial load
+            window.addEventListener('scroll', adjustVisibility);
+            adjustVisibility();  // Run once on page load
+        });
         function getResizedCanvasDataURL() {
             let tempCanvas = document.createElement('canvas');
             tempCanvas.width = 28;
             tempCanvas.height = 28;
             let tempCtx = tempCanvas.getContext('2d');
 
+            // Store the original image data for restoring later
+            let originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            // Convert white sketch on black background to black sketch on white background for backend processing
+            let processedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < processedImageData.data.length; i += 4) {
+                // If pixel color is white (or near white), make it black
+                if (processedImageData.data[i] > 200 && processedImageData.data[i+1] > 200 && processedImageData.data[i+2] > 200) {
+                    processedImageData.data[i] = 0;
+                    processedImageData.data[i + 1] = 0;
+                    processedImageData.data[i + 2] = 0;
+                } else {
+                    // Otherwise, make it white
+                    processedImageData.data[i] = 255;
+                    processedImageData.data[i + 1] = 255;
+                    processedImageData.data[i + 2] = 255;
+                }
+            }
+            ctx.putImageData(processedImageData, 0, 0);
+
+            // Draw the processed image onto the smaller canvas
             tempCtx.drawImage(canvas, 0, 0, 280, 280, 0, 0, 28, 28);
+
+            // Restore the original image data back to the main canvas
+            ctx.putImageData(originalImageData, 0, 0);
 
             return tempCanvas.toDataURL();
         }
+
+
         function getMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
             return {
