@@ -7,7 +7,7 @@ To train the model, ensure to set up your environment properly by following the 
 
 ## Installation
 
-To set up the necessary environment to train the models. We recommand using conda/miniconda. You will need to install several packages and python 3.10. You can install all the required packages using the following command:
+To set up the necessary environment to train the models. We recommand using conda/miniconda. You will need to install several packages and python 3.10.12 You can install all the required packages using the following command:
 
 ```bash
 pip install optuna numpy tensorflow tensorflow-datasets==4.0.1 scikit-learn tqdm matplotlib pydot graphviz
