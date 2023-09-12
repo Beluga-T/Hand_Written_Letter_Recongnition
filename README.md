@@ -37,7 +37,7 @@ python ./ANN_src/bayesianTuning.py
 ```
 ### CNN model
 
-To train the ANN model, use the following command in your terminal:
+To train the CNN model, use the following command in your terminal:
 
 ```bash
 python ./CNN_src/cnn_model.py
