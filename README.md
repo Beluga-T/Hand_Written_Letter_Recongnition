@@ -75,13 +75,13 @@ Meta is prone to making mistakes in the identification of (q,g), (i,l).
 ## Training and Validation Loss and Accuracy
 
 ### CNN Loss and Accuracy
-![CNN Loss](/FlaskApp/CNN_src/Accuracy_and_Loss.png)
+![CNN LossA](/FlaskApp/CNN_src/Accuracy_and_Loss.png)
 ### ANN Loss and Accuracy
-![ANN Loss](/FlaskApp/static/ANN_loss.png)
-![ANN Accuracy](/FlaskApp/static/ANN_accuracy.png)
+![ANN LossA](/FlaskApp/static/ANN_loss.png)
+
 ### Meta Loss and Accuracy
-![Meta Loss](/FlaskApp/static/meta_loss.png)
-![Meta Accuracy](/FlaskApp/static/meta_accuracy.png)
+![Meta LossA](/FlaskApp/META_model_src/accuracy_and_loss_graph.png)
+
 
 ## Model Architecture
 
