@@ -295,6 +295,10 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 
 plt.tight_layout()
+
+# Save the plot to a file
+#save the plot
+plt.savefig('accuracy_loss_plot_ANN.png', dpi=335)  # Save the figure
 plt.show()
 
 # Visualize the model's architecture
