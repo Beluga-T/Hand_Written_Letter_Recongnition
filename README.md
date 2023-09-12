@@ -88,7 +88,7 @@ Meta is prone to making mistakes in the identification of (q,g), (i,l).
 ### CNN Model Architecture
 ![CNN Model Architecture](/FlaskApp/CNN_src/cnn_model.png)
 ### ANN Model Architecture
-![ANN Model Architecture](/FlaskApp/ANN_src/ann_model.png)
+![ANN Model Architecture](/FlaskApp/ANN_src/best_ANN.png)
 
 ## License
 
