@@ -169,6 +169,17 @@
             background: linear-gradient(135deg, #444 0%, #555 100%);
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.5);
         }
+        canvas {
+            -webkit-touch-callout: none; /* Prevents long-press save options on mobile */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version */
+
+            touch-action: none;  /* Prevents tap to zoom on mobile */
+        }
+
         /* Custom Dropdown */
         .custom-dropdown {
             position: relative;
@@ -311,7 +322,7 @@
     <section id="annImplementation" class="model-section">
         <h2>ANN Model's Implementation</h2>
         <p>Our ANN model is also implemented using TensorFlow and Keras. It consists of an input layer, multiple hidden layers, and an output layer. Each neuron in a layer receives an input from the neurons present in the previous layer, thus making it fully connected.</p>
-        <p> Accuracy on test set: <span class="highlighted-accuracy">92.9%</span> </p>
+        <p> Accuracy on test set: <span class="highlighted-accuracy">91.5%</span> </p>
     </section>
 
     <section id="annConfusionMatrix" class="model-section">
@@ -359,7 +370,7 @@
         <h3>1. Unsatisfactory Performance of the baseline ANN Models</h3>
         <p>One of the first challenges we encountered with was the underwhelming accuracy of our initial, untuned model. It was evident that without fine-tuning, the model's performance wouldn't meet our standards.</p>
 
-        <p>To address this, we turned to Optuna, an open-source hyperparameter optimization framework. By defining a hypermodel and leveraging Optuna with Bayesian pruning, we were able to enhance our ANN's accuracy remarkably. This optimization step elevated our test accuracy from a mere 84% to a commendable 92.9%.</p>
+        <p>To address this, we turned to Optuna, an open-source hyperparameter optimization framework. By defining a hypermodel and leveraging Optuna with Bayesian pruning, we were able to enhance our ANN's accuracy remarkably. This optimization step elevated our test accuracy from a mere 84% to a commendable 91.5%.</p>
     </div>
     </section>
 
@@ -377,8 +388,7 @@
     <div class="challenge" style="margin-bottom: 30px;">
         <h3>3. Web UI Deployment and Iteration</h3>
 
-        <p>Several iterations were undertaken to transform the canvas. Each version, while an improvement over the last, presented its own unique challenges. From resizing issues to color contrasts, every modification was a learning experience. Flask, as our chosen web framework, facilitated these changes, but the deployment on Heroku presented a different set of challenges. Troubleshooting build packs, managing dyno behaviors, and optimizing startup times felt like navigating through a maze.</p>
-
+        <p>During our project, we went through multiple rounds of tweaking the canvas. Each time we made changes, we faced a new set of challenges. We had to grapple with everything from adjusting sizes to sorting out color contrasts. Using Flask for our website helped a lot, but when it came to deploying it on Heroku, that was a whole different ballgame. Trying to fix issues with build packs, figuring out how dynos work, and speeding up the startup times was like finding our way through a really confusing puzzle.</p>
         <p>With persistent effort, we evolved our tool from a basic canvas to the polished version you see today. </p>
 
     </div>
@@ -456,7 +466,33 @@
             ctx.beginPath();
             ctx.moveTo(pos.x, pos.y);
         });
+        // Add touch event listeners
+        canvas.addEventListener('touchstart', function(event) {
+            drawing = true;
+            var pos = getTouchPos(canvas, event);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            event.preventDefault(); // Prevent scrolling when touching the canvas
+        });
 
+        canvas.addEventListener('touchend', function(event) {
+            drawing = false;
+            ctx.closePath();
+        });
+
+        canvas.addEventListener('touchmove', function(event) {
+            if (!drawing) return;
+            var pos = getTouchPos(canvas, event);
+            ctx.lineWidth = 20;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'white';
+
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            event.preventDefault(); // Prevent scrolling when touching the canvas
+        });
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
@@ -521,6 +557,13 @@
             return {
                 x: evt.clientX - rect.left,
                 y: evt.clientY - rect.top
+            };
+        }
+        function getTouchPos(canvas, evt) {
+            var rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.touches[0].clientX - rect.left,
+                y: evt.touches[0].clientY - rect.top
             };
         }
 
