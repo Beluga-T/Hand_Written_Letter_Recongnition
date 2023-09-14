@@ -72,13 +72,13 @@ python ./META_model_src/meta_model.py
 
 ## Confusion Matrix
 
-### CNN Matrix
+### CNN Confusion Matrix
 ![CNN Confusion Matrix](/FlaskApp/static/CNN_confusion_matrix.png)
 CNN is prone to making mistakes in the identification of (q,g), (i,l). The errors are mostly concentrated in partial recognition. 
-### ANN Matrix
+### ANN Confusion Matrix
 ![ANN Confusion Matrix](/FlaskApp/static/ANN_confusion_matrix.png)
 ANN is prone to making mistakes in the identification of (q,g), (i,l), but this model will return low confidense when the letter is ambiguous. 
-### Meta Model Matrix
+### Meta Confusion Matrix
 ![Meta Confusion Matrix](/FlaskApp/static/meta_confusion_matrix.png)
 Meta is prone to making mistakes in the identification of (q,g), (i,l).
 
