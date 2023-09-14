@@ -23,12 +23,12 @@ pip install optuna numpy tensorflow tensorflow-datasets==4.0.1 scikit-learn tqdm
 ```
 
 
-## Working directory
+## Working Directory
 The working directory is /FlaskApp
 ``` bash
 cd FlaskApp
 ```
-## Data preprocessing
+## Data Preprocessing
 To generate the dataset numpy file in the local folder, run the cnn_model.py first, it will create 4 .npy files under the preprocess_image_data_npy folder.
 Train the CNN model, use the following command in your terminal:
 
@@ -38,21 +38,21 @@ python ./CNN_src/cnn_model.py
 
 ## Trainning the Models
 
-### ANN model
+### ANN Model
 
 To train the ANN model, use the following command in your terminal:
 
 ```bash
 python ./ANN_src/bayesianTuning.py
 ```
-### CNN model
+### CNN Model
 
 To train the CNN model, use the following command in your terminal:
 
 ```bash
 python ./CNN_src/cnn_model.py
 ```
-### Meta model
+### Meta Model
 
 To train the Meta model, use the following command in your terminal:
 
